@@ -1,0 +1,4 @@
+
+
+tree:
+	g++ -g tree.cpp stack.cpp o tree

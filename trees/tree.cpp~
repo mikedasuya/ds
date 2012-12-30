@@ -1,0 +1,68 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include "stack.h"
+#include "node.h"
+
+node * getNode(node *, int input);
+void traverse(node *);
+
+int main() {
+	int ar[8] = {34,2,4,7,68,45,23,6};
+	int i = 0;
+	node * root = NULL;
+	while (i < 8) {
+		int input= arr[i];
+		if (root == NULL) {
+			root = new node(ar[i]);	
+		} else {
+			node * ptr = getNode(root, ar[i]);
+			if (ptr->data < ar[i]) {
+				ptr->right = new node(ar[i])
+			} else if (ptr->data > ar[i]) {
+				ptr->left = new node(ar[i]);
+			}
+		}
+		i++;
+	}	
+	traverse(root);
+
+}
+
+node * getNode(node * root, int data) {
+	node * temp = root;
+	while (1) {
+		if (temp->data > data) {
+			if (temp->left !=NULL) {
+				temp= temp->left;
+			} else {
+				return temp;
+			}		
+		} else if (temp->data < data) {
+			if (temp->right !=NULL) {
+				temp = temp->right;
+			} else {
+				returntemp;
+			}
+		}
+	}
+}
+
+void traverse(node * root) {
+	stack st=new stack();
+	if (root->right) {
+		st.push(root->right);
+	}
+	st.push(root);
+	while (st.size() > 0) {
+		node = st.pop();
+		printf("\n ----whie:%s: --\n", node->data);fflush(stdout);
+		if (node->right !=NULL) {
+			st.push(node->right);
+		}
+		if (node->left !=NULL) {
+			node =node->left;
+			st.push(node);
+		}
+	}
+
+}
