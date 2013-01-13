@@ -1,6 +1,8 @@
 #ifndef __stack_h
 #define __stack_h
 
+//class node;
+
 template <class T>
 class stack {
 	public:

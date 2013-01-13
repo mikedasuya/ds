@@ -4,7 +4,7 @@
 #include "traverse.h"
 #include "node.h"
 
-int copystack(stack<node*> *,stack<node*>*);
+//int copystack(stack<node*> *,stack<node*>*);
 
 int main() {
 
@@ -45,8 +45,8 @@ int main() {
 	convertTreeToArray(root);
 }
 
-	int copystack(stack<node*> * f1, stack<node*>* f2) {
-		while (f1->size() > 0) {
-			f2->push(f1->pop());
-		}
-	}
+	//int copystack(stack<node*> * f1, stack<node*>* f2) {
+	//	while (f1->size() > 0) {
+	//		f2->push(f1->pop());
+	//	}
+	//}
