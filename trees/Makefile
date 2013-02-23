@@ -8,5 +8,8 @@ artotr:
 	g++ -g convertArrayToTree.cpp traverse.cpp
 pree:
 	g++ -g preordertotree.cpp traverse.cpp
+
+removal:
+	g++ -g removalOfNode.cpp traverse.cpp
 clean:
 	rm -rf a.out

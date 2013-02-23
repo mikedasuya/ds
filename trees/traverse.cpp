@@ -9,15 +9,17 @@
 void traverse(node * root) {
 	stack<node*>* st = new stack<node*>();
 	st->push(root);
+        node * ptr = root;
 	while (st->size() > 0) {
-		node * nod = st->pop();
-		printf("\n ----whie:%d: --\n", nod->data);fflush(stdout);
-		if (nod->right != NULL) {
-			st->push(nod->right);
+		while (ptr->left != NULL) {
+			ptr = ptr->left;
+			st->push(ptr);
 		}
-		if (nod->left != NULL) {
-			nod = nod->left;
-			st->push(nod);
+		node * elem = st->pop();
+		printf("\n ----Vl--:%d: \n",elem->data);
+		if (elem->right != NULL) {
+			st->push(elem->right);
+			ptr = elem->right;
 		}
 	}
 
