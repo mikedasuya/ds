@@ -3,21 +3,30 @@
 
 #include "Common.h"
 
+namespace ENGINE {
 
 class Engine {
 	private:
-	INPUT forWhom;
+	int ar[3][3];
 	private:
-	int column(int ar[3][3], INPUT val);
-	bool colum0Contains(int ar[3][3], INPUT val);
-	bool colum1Contains(int ar[3][3], INPUT val);
-	bool colum2Contains(int ar[3][3], INPUT val);
+	int column(INPUT val);
+	bool colum0Contains(INPUT val);
+	bool colum1Contains(INPUT val);
+	bool colum2Contains(INPUT val);
+	int diagnals(INPUT val);
+        int rows(INPUT val);
+	bool row0Contain(INPUT val);
+	bool row1Contain(INPUT val);
+	bool row2Contain(INPUT val);
+	bool assign(int ar[3][3]);
+		
 	public:
 	
-	Engine(INPUT input );
-	int evaluateState(int ar[3][3]);
+	Engine();
+	int evaluateState(int ar[3][3], INPUT val);
 	
 };
 
+}
 
 #endif
