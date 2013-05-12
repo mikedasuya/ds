@@ -20,6 +20,20 @@ int Engine::evaluateState(int ar[3][3], INPUT forWhom) {
 	printf ("\n ------total -:%d:--\n", sum);fflush(stdout);
 	return sum;
 }
+
+bool Engine::isGamePossible(int ar[][]) {
+    if (column(CROSS) + rows(CROSS) > 0 ||
+        column(ZERO) + rows(ZERO) > 0 ) {
+        return true;
+    }
+    return false;
+
+}
+
+bool Engine::UserWinCompulsion(int ar[3][3]) {
+    
+
+}
 bool Engine::assign(int arr[3][3]) {
 	for (int i = 0; i < 3; i++) {
 		for (int j = 0; j < 3;j++) {
@@ -29,145 +43,251 @@ bool Engine::assign(int arr[3][3]) {
 
 }
 
-int Engine::diagnals(INPUT val) {
+bool isWinning(int a[3][3], INPUT forWhom) {
+    if (row0Wins(ar, forWhom) ||
+        row1Wins(ar, forWhom) ||
+        row2Wins(ar, forWhom) ||
+        column1Wins(ar, forWhom )||
+        column2Wins(ar, forWhom )||
+        column3Wins(ar, forWhom )||
+        diagnal1Wins(ar, forWhom) ||
+        diagnal2Wins(ar, forWhom)) {
+            retrun true;
+        }
+        return false;
+}
+
+
+bool column0Wins(int ar[3][3], INPUT val) {
+      int j = 0;
+      bool result = false;
+      int count = 0;
+      for (int i = 0; i < 3; i++) {
+            if (ar[i][j] == val ) {
+                count++;
+            }
+      }
+      if (count == 2) {
+          result = true;
+      }
+      return result;
+}
+
+bool column1Wins(int ar[3][3], INPUT val) {
+      int j = 1;
+      bool result = false;
+      int count = 0;
+      for (int i = 0; i < 3; i++) {
+            if (ar[i][j] == val ) {
+                count++;
+            }
+      }
+      if (count == 2) {
+          result = true;
+      }
+      return result;
+}
+
+
+bool column2Wins(int ar[3][3], INPUT val) {
+      int j = 2;
+      bool result = false;
+      int count = 0;
+      for (int i = 0; i < 3; i++) {
+            if (ar[i][j] == val ) {
+                count++;
+            }
+      }
+      if (count == 2) {
+          result = true;
+      }
+      return result;
+}
+
+
+bool row0Wins(int ar[3][3], INPUT val) {
+      int j = 0;
+      bool result = false;
+      int count = 0;
+      for (int i = 0; i < 3; i++) {
+            if (ar[j][i] == val ) {
+                count++;
+            }
+      }
+      if (count == 2) {
+          result = true;
+      }
+      return result;
+}
+
+bool row1Wins(int ar[3][3], INPUT val) {
+      int j = 1;
+      bool result = false;
+      int count = 0;
+      for (int i = 0; i < 3; i++) {
+            if (ar[j][i] == val ) {
+                count++;
+            }
+      }
+      if (count == 2) {
+          result = true;
+      }
+      return result;
+}
+
+bool row2Wins(int ar[3][3], INPUT val) {
+      int j = 2;
+      bool result = false;
+      int count = 0;
+      for (int i = 0; i < 3; i++) {
+            if (ar[j][i] == val ) {
+                count++;
+            }
+      }
+      if (count == 2) {
+          result = true;
+      }
+      return result;
+}
+
+
+
+int Engine::diagnals(int ar[3][3], INPUT val) {
 	int count = 0;
-	if (val == CROSS) {
-		val = ZERO;	
-	} else if (val == ZERO) {
-		val = CROSS;
-	}
-
-	if (ar[0][0] == 0 &&
-	    ar[1][1] == 0 &&
-	    ar[2][2] == 0) {
-		count++;
-	} else {
-		if (ar[0][0] == val ||
-		    ar[1][1] == val ||
-		    ar[2][2] == val) {
-
-		} else {
-			count++;
-		}	   
-	}
-	if (ar[2][0] == 0 &&
-	    ar[1][1] == 0 &&
-	    ar[0][2] == 0) {
-		count++;
-	} else {
-		if (ar[2][0] == val ||
-		    ar[1][1] == val || 
-		    ar[0][2] == val) {
-		
-		} else {
-			count++;
-		}
-	}
+    count = diagnal1(ar, val) + diagnal2(ar, val);
 	return count;
 		
+}
+
+bool Engine::diagnal1Wins(int ar[][], INPUT val) {
+	bool result = false;
+    for (int j = 0, i = 2; j < 3, i > -1;j++ ,i--) {
+            if (ar[i][j] == val) { 
+                count++
+            }
+    }
+    if (count == 2) {
+        result = true;
+    }
+    return result;
+
+}
+bool Engine::diagnal2Wins(int ar[][], INPUT val) {
+	bool result = false;
+    for (int j = 0, i = 2; j < 3, i > -1;j++ ,i--) {
+            if (ar[j][i] == val ) {
+                count++
+            }
+    }
+    if (count == 2) {
+        result = true;
+    }
+    return result;
+}
+
+
+
+bool Engine::diagnal1(int ar[3][3], INPUT val) {
+	bool result = false;
+    for (int j = 0, i = 2; j < 3, i > -1;j++ ,i--) {
+            if (ar[i][j] == val ||
+                ar[i][j] == 0 ) {
+                count++
+            }
+    }
+    if (count == 3) {
+        result = true;
+    }
+	return result;
+}
+
+bool Engine::diagnal2(int ar[3][3], INPUT val) {
+	bool result = false;
+    for (int j = 0, i = 2; j < 3, i > -1;j++ ,i--) {
+            if (ar[j][i] == val ||
+                ar[j][i] == 0 ) {
+                count++
+            }
+    }
+    if (count == 3) {
+           result = true;
+    }
+	return result;
 }
 
 int Engine::rows(INPUT val) {
 	int count = 0;
-	if (ar[0][0] == 0 && 	
-	    ar[0][1] == 0 && 	
-	    ar[0][2] == 0 ) {
-		count++;
-	} else if ( row0Contain(val)) {
+	if ( row0Contain(val)) {
 		count++;
 	}
-	if (ar[1][0] == 0 && 	
-	    ar[1][1] == 0 && 	
-	    ar[1][2] == 0 ) {
-		count++;
-	} else if (row1Contain(val)) {
+	if (row1Contain(val)) {
 		count++;
 	}
-	if (ar[2][0] == 0 && 	
-	    ar[2][1] == 0 && 	
-	    ar[2][2] == 0 ) {
-		count++;
-	} else if (row2Contain(val)) {
+	if (row2Contain(val)) {
 		count++;
 	}
 	return count;
 
 }
 
-bool Engine::row0Contain(INPUT val) {
-	if (val == CROSS) {
-		val = ZERO;
-	} else if (val == ZERO) {
-		val = CROSS;
-	}
-	if (ar[0][0] == val ||
-	    ar[0][1] == val ||
-	    ar[0][2] == val)
-	    {
-		return false;
-	}
-	return true;
-
+bool row0Contains(int ar[3][3], INPUT val) {
+      int j = 0;
+      bool result = false;
+      int count = 0;
+      for (int i = 0; i < 3; i++) {
+            if (ar[j][i] == val ||
+                ar[j][i] == 0) {
+                count++;
+            }
+      }
+      if (count == 3) {
+          result = true;
+      }
+      return result;
 }
 
-bool Engine::row1Contain(INPUT val) {
-	if (val == CROSS) {
-		val = ZERO;
-	} else if (val == ZERO) {
-		val = CROSS;
-	}
-	if (ar[1][0] == val ||
-	    ar[1][1] == val ||
-	    ar[1][2] == val)
-	    {
-		return false;
-	}
-	return true;
-
+bool row1Contains(int ar[3][3], INPUT val) {
+      int j = 1;
+      bool result = false;
+      int count = 0;
+      for (int i = 0; i < 3; i++) {
+            if (ar[j][i] == val ||
+                ar[j][i] == 0 ) {
+                count++;
+            }
+      }
+      if (count == 3) {
+          result = true;
+      }
+      return result;
 }
 
-
-bool Engine::row2Contain(INPUT val) {
-	if (val == CROSS) {
-		val = ZERO;
-	} else if (val == ZERO) {
-		val = CROSS;
-	}
-	if (ar[2][0] == val ||
-	    ar[2][1] == val ||
-	    ar[2][2] == val)
-	    {
-		return false;
-	}
-	return true;
-
+bool row2Contains(int ar[3][3], INPUT val) {
+      int j = 2;
+      bool result = false;
+      int count = 0;
+      for (int i = 0; i < 3; i++) {
+            if (ar[j][i] == val ||
+                ar[j][i] == 0 ) {
+                count++;
+            }
+      }
+      if (count == 3) {
+          result = true;
+      }
+      return result;
 }
 
 int Engine::column(INPUT val) {
 
 	int count = 0;
-	if ((ar[0][0] == 0 &&
-	    ar[1][0] == 0 &&
-	    ar[2][0] == 0))
-	 {
-		count++;
-	} else if (colum0Contains(val)) {
+	if (colum0Contains(val)) {
 		count++;
 	}
-
-	if (ar[0][1] == 0 &&
-	    ar [1][1] == 0 &&
-	    ar [2] [1] == 0 ) {
-		count++;
-	} else 	if (colum1Contains(val)) {
+	if (colum1Contains(val)) {
 		count++;
 	}
-
-	if (ar[0] [2] == 0 &&
-	    ar[1] [2] == 0 &&
-	    ar[2] [2] == 0) {
-		count ++;
-	} else 	if (colum2Contains(val)) {
+	if (colum2Contains(val)) {
 		count++;
 	}
 
@@ -175,46 +295,54 @@ int Engine::column(INPUT val) {
 
 }	
 
-bool Engine::colum0Contains(INPUT val) {
-	if (val == CROSS) {
-		val = ZERO;
-	} else if (val == ZERO) {
-		val = CROSS;
-	}
-	if (ar[0][0] == val ||
-	    ar[1][0] == val ||
-	    ar[2][0] == val) {
-		return false;
-	}
-	return true;
+bool column0Contains(int ar[3][3], INPUT val) {
+      int j = 0;
+      bool result = false;
+      int count = 0;
+      for (int i = 0; i < 3; i++) {
+            if (ar[i][j] == val  ||
+                ar[i][j] == 0 ) {
+                count++;
+            }
+      }
+      if (count == 3) {
+          result = true;
+      }
+      return result;
 }
 
-bool Engine::colum1Contains(INPUT val) {
-	if (val == CROSS) {
-		val = ZERO;
-	} else if (val == ZERO) {
-		val = CROSS;
-	}
-	if (ar[0][1] == val ||
-	    ar[1][1] == val ||
-	    ar[2][1] == val) {
-		return false;
-	}
-	return true;
+bool column1Contains(int ar[3][3], INPUT val) {
+      int j = 1;
+      bool result = false;
+      int count = 0;
+      for (int i = 0; i < 3; i++) {
+            if (ar[i][j] == val || 
+             ar[i][j] == 0 ) {
+                count++;
+            
+      }
+      if (count == 3) {
+          result = true;
+      }
+      return result;
 }
 
 
-bool Engine::colum2Contains(INPUT val) {
-	if (val == CROSS) {
-		val = ZERO;
-	} else if (val == ZERO) {
-		val = CROSS;
-	}
-	if (ar[0][2] == val ||
-	    ar[1][2] == val ||
-	    ar[2][2] == val) {
-		return false;
-	}
-	return true;
+bool column2Contains(int ar[3][3], INPUT val) {
+      int j = 2;
+      bool result = false;
+      int count = 0;
+      for (int i = 0; i < 3; i++) {
+            if (ar[i][j] == val ||
+                ar[i][j] == 0 ) {
+                count++;
+            }
+      }
+      if (count == 3) {
+          result = true;
+      }
+      return result;
 }
+
+
 }
