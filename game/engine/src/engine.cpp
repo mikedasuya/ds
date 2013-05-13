@@ -22,6 +22,11 @@ int Engine::evaluateState(int ar[3][3], INPUT forWhom) {
 }
 
 bool Engine::isGamePossible(int ar[][]) {
+
+    //check if already there are 3 zero or 3 cross
+    if (isWinning(ar, ZERO) || isWinning(ar, CROSS)) {
+        return false;
+    }
     if (column(CROSS) + rows(CROSS) > 0 ||
         column(ZERO) + rows(ZERO) > 0 ) {
         return true;
@@ -31,9 +36,10 @@ bool Engine::isGamePossible(int ar[][]) {
 }
 
 bool Engine::UserWinCompulsion(int ar[3][3]) {
-    
+        
 
 }
+
 bool Engine::assign(int arr[3][3]) {
 	for (int i = 0; i < 3; i++) {
 		for (int j = 0; j < 3;j++) {
@@ -43,18 +49,69 @@ bool Engine::assign(int arr[3][3]) {
 
 }
 
+
+//checks whether there are rows with all ZERO or all cross.
+//In that case no need to proceed further.
+
 bool isWinning(int a[3][3], INPUT forWhom) {
-    if (row0Wins(ar, forWhom) ||
-        row1Wins(ar, forWhom) ||
-        row2Wins(ar, forWhom) ||
-        column1Wins(ar, forWhom )||
-        column2Wins(ar, forWhom )||
-        column3Wins(ar, forWhom )||
-        diagnal1Wins(ar, forWhom) ||
-        diagnal2Wins(ar, forWhom)) {
-            retrun true;
+
+    bool result = false;
+    int count = 0;
+    //check rows for all cross or zero
+    for (int i = 0; i < 3 ;i++) {
+        for (int j = 0;j < 3; j++) {
+            if (ar[i][j] == val) {
+                count++;
+            }
         }
-        return false;
+        if (count == 3) {
+            result = true;
+            break;
+        }
+        count = 0;
+    }
+    count = 0;
+    if (result == false) {
+        //check all column for all cross or zero
+        for (int i = 0; i < 3 ;i++) {
+            for (int j = 0;j < 3; j++) {
+                if (ar[j][i] == val) {
+                    count++;
+                }
+            }
+            if (count == 3) {
+                result = true;
+                break;
+            }
+            count = 0;
+
+        }
+    }
+    count = 0;
+    if (result == false) {
+        //check for diagnals for all cross or zero
+        for (int i = 0, j = 2; i < 3, j > -1 ;i++, j--) {
+            if (ar[i][j] == val) {
+                count++;
+            }
+        }
+        if (count == 3) {
+            result = true;
+        }
+    }
+    if (result == false) {
+        //check diagnal
+        for (int i = 0, j = 2; i < 3, j > -1 ;i++, j--) {
+            if (ar[j][i] == val) {
+                count++;
+            }
+        }
+        if (count == 3) {
+            result = true;
+        }
+    }
+    return result;
+    
 }
 
 

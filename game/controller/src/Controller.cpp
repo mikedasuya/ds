@@ -9,19 +9,17 @@ int Controller::nextMove( int ar[3][3]) {
 	if (!eng->gameIsPossible()) {
 		return 0;
 	}
-    if (userOrCompWins()) {
-
-    }
     struct rowColumnParam * val = eng->userWinCompulsion(ar);
     if (val != NULL) {
          ar[val->row][val->column] = ZERO;
          return 1;
     }
-    struct rowColumnParam * val = eng->CompWin(ar);
+/*    struct rowColumnParam * val = eng->CompWin(ar);
     if (val != NULL) {
         ar[val->row][val->column] = CROSS;
         return 2;
     }
+ */
 	for (int i = 0; i < 3 ; i++) {
 		for (int j = 0;j < 3; j++) {
             evaluateState(ar,i , j);
