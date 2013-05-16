@@ -6,20 +6,20 @@ Controller::Controller() {
 }
 
 int Controller::nextMove( int ar[3][3]) {
-	if (!eng->gameIsPossible()) {
+    Iterator<Node*>::iterator iter = list->begin();
+    while (iter != list->end()) {
+        Node * ptr = *iter;
+        delete ptr;
+    }
+	if (!eng->IsGamePossible()) {
 		return 0;
 	}
-    struct rowColumnParam * val = eng->userWinCompulsion(ar);
-    if (val != NULL) {
-         ar[val->row][val->column] = ZERO;
-         return 1;
+    if (eng->isComputerWinning(ar)){
+        return 0;
     }
-/*    struct rowColumnParam * val = eng->CompWin(ar);
-    if (val != NULL) {
-        ar[val->row][val->column] = CROSS;
-        return 2;
+    if (eng->userWinCompulsion(ar)) {
+        return 1;
     }
- */
 	for (int i = 0; i < 3 ; i++) {
 		for (int j = 0;j < 3; j++) {
             evaluateState(ar,i , j);
@@ -29,14 +29,15 @@ int Controller::nextMove( int ar[3][3]) {
         Node * ptr = list->pop_front();
         ar[ptr->row][ptr->column] = ZERO;
     }
+    return 5;
 
 }
 
 void Controller::evaluateState(int ar[3][3], int row, int column) {
         if (ar[i][j] == 0) {
-            ar[i][j] = ZERO;
+            ar[i][j] = CROSS;
             //comp will evaluate
-            int result = eng->evaluate(ar, ZERO);
+            int result = eng->evaluateState(ar);
             //if comp wins go back
             addNode(ar,i,j, result);
             ar[i][j] = 0;
@@ -44,8 +45,6 @@ void Controller::evaluateState(int ar[3][3], int row, int column) {
 }
 
 void Controller::addNode(int ar[3][3], int row, int column, int result) {
-    if (eng->userWinsInNextMoves(ar)) {
-    } else {     
         if (list->empty()) {
             Node * ptr = new Node(ar, row, column, result);
             list->add(ptr);
@@ -56,7 +55,6 @@ void Controller::addNode(int ar[3][3], int row, int column, int result) {
                 list->push_front(ptr);
             }
         }
-    }
 }
 
 }
