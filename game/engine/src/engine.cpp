@@ -91,13 +91,10 @@ bool Engine::doesUserWinsInNextMove(int ar[3][3]) {
 bool Engine::isGamePossible(int ar[3][3]) {
 
     //check if already there are 3 zero or 3 cross
-    printf ("\n -------------is game possible -start-\n");fflush(stdout);
-    if (column(ar, CROSS) + rows(ar, CROSS) > 0 ||
-        column(ar, ZERO) + rows(ar, ZERO) > 0 ) {
-    printf ("\n -------------is game possible true -end --\n");fflush(stdout);
+    if ( (column(ar, CROSS) + rows(ar, CROSS) + diagnals(ar, CROSS)) > 0 ||
+        (column(ar, ZERO) + rows(ar, ZERO) + diagnals (ar, ZERO)) > 0 ) {
         return true;
     }
-    printf ("\n -------------is game possible fale -end --\n");fflush(stdout);
     return false;
 
 }
@@ -345,7 +342,7 @@ bool Engine::diagnal1(int ar[3][3], INPUT val) {
             }
     }
     if (count == 3) {
-        printf ("\n -----diagnal 1 is possible-:%d:-\n", val);fflush(stdout);
+//        printf ("\n -----diagnal 1 is possible-:%d:-\n", val);fflush(stdout);
         result = true;
     }
 	return result;
@@ -361,7 +358,7 @@ bool Engine::diagnal2(int ar[3][3], INPUT val) {
             }
     }
     if (count == 3) {
-        printf ("\n -----diagnal 2 is possible-:%d:-\n", val);fflush(stdout);
+  //      printf ("\n -----diagnal 2 is possible-:%d:-\n", val);fflush(stdout);
            result = true;
     }
 	return result;
@@ -393,7 +390,7 @@ bool Engine::row0Contains(int ar[3][3], INPUT val) {
             }
       }
       if (count == 3) {
-          printf ("\n ---row-- 0 for :%d: --\n", val);fflush(stdout);
+    //      printf ("\n ---row-- 0 for :%d: --\n", val);fflush(stdout);
           result = true;
       }
       return result;
@@ -410,7 +407,7 @@ bool Engine::row1Contains(int ar[3][3], INPUT val) {
             }
       }
       if (count == 3) {
-          printf ("\n ---row--1 for :%d: --\n", val);fflush(stdout);
+      //    printf ("\n ---row--1 for :%d: --\n", val);fflush(stdout);
           result = true;
       }
       return result;
@@ -427,7 +424,7 @@ bool Engine::row2Contains(int ar[3][3], INPUT val) {
             }
       }
       if (count == 3) {
-          printf ("\n ---row--2 for :%d: --\n", val);fflush(stdout);
+       //   printf ("\n ---row--2 for :%d: --\n", val);fflush(stdout);
           result = true;
       }
       return result;
@@ -461,7 +458,7 @@ bool Engine::column0Contains(int ar[3][3], INPUT val) {
             }
       }
       if (count == 3) {
-          printf ("\n ---column--0 for :%d: --\n", val);fflush(stdout);
+        //  printf ("\n ---column--0 for :%d: --\n", val);fflush(stdout);
           result = true;
       }
       return result;
@@ -479,7 +476,7 @@ bool Engine::column1Contains(int ar[3][3], INPUT val) {
             
       }
       if (count == 3) {
-          printf ("\n ---column--1 for :%d: --\n", val);fflush(stdout);
+        //  printf ("\n ---column--1 for :%d: --\n", val);fflush(stdout);
           result = true;
       }
       return result;
@@ -497,7 +494,7 @@ bool Engine::column2Contains(int ar[3][3], INPUT val) {
             }
       }
       if (count == 3) {
-          printf ("\n ---column--2 for :%d: --\n", val);fflush(stdout);
+         // printf ("\n ---column--2 for :%d: --\n", val);fflush(stdout);
           result = true;
       }
       return result;

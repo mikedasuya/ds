@@ -16,17 +16,18 @@ Controller::Controller() {
 int Controller::nextMove( int ar[3][3]) {
     //just make list empty per move as it contains the nodes per move
     // ----next move
+    listNode.clear();
     list<Node*>::iterator iter = listNode.begin();
     while (iter != listNode.end()) {
         Node * ptr = *iter;
-        delete ptr;
+//        delete ptr;
     }
     // check to see if any rows/columns/dignals are possible
 	if (!eng->isGamePossible(ar)) {
-		return 0;
+		return -4;
 	}
     if (eng->isComputerWinning(ar)){
-        return 0;
+        return -3;
     }
     if (eng->userWinCompulsion(ar)) {
         return 1;
@@ -42,6 +43,9 @@ int Controller::nextMove( int ar[3][3]) {
         int column = ptr->column;
         ar[row][column] = CROSS;
     }
+	if (!eng->isGamePossible(ar)) {
+		return -4;
+	}
     return 5;
 
 }

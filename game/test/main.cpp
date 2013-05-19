@@ -48,7 +48,11 @@ int main() {
         }
 		ar[row][coul] = ZERO;
 		printGame(ar);
-		calculateComputerMove(ar);
+		int val = calculateComputerMove(ar);
+        if (val < 0) {
+            printf("\n ---game over ---\n");fflush(stdout);
+            break;
+        }
 		printGame(ar);
 		
 		
