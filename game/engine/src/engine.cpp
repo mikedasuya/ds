@@ -2,13 +2,25 @@
 #include "Common.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include "Param.h"
 
 namespace ENGINE {
 
 Engine::Engine() {
 }
 
-int Engine::evaluateState(int ar[3][3], INPUT forWhom) {
+void Engine::printGame(int ar[3][3]) {
+	for ( int i = 0; i < 3; i++) {
+		printf("\n");fflush(stdout);
+		for (int j = 0; j < 3; j++) {
+			printf("%d|", ar[i][j]);fflush(stdout);
+		}
+		printf("\n");fflush(stdout);
+	}
+
+}
+
+int Engine::evaluateState(int ar[3][3]) {
 	int columnC = column(ar, CROSS);
 	int rowsC = rows(ar, CROSS);
 	int diagnal = diagnals(ar, CROSS);
@@ -18,47 +30,52 @@ int Engine::evaluateState(int ar[3][3], INPUT forWhom) {
 	rowsC = rows(ar, ZERO);
 	diagnal = diagnals(ar, ZERO);
 	int sumZ = columnC+rowsC+diagnal;
+	printf ("\n ------total for  ZERO-:%d:--\n", sumZ);fflush(stdout);
     if (userWinCompulsion(ar)) {
         if (doesUserWinsInNextMove(ar)) {
             return -20;
         }
     }
+    printGame(ar);
+	printf ("\n ------difference-:%d:--\n", sum - sumZ);fflush(stdout);
+    int ch;
+    scanf("%d", &ch);
 	return sum - sumZ;
 }
 
-bool doesUserCompulsionAfterNextMove(int ar[3][3]) {
+bool Engine::doesUserWinsInNextMove(int ar[3][3]) {
         bool result = false;
         struct Param * p = NULL;
         int count = 0;
-        if ( p = column0Wins(ar, ZERO) != NULL) {
+        if ( (p = column0Wins(ar, ZERO)) != NULL) {
             count++;
             result = true;
         }
-        if ( p = column1Wins(ar, ZERO) != NULL) {
+        if ( (p = column1Wins(ar, ZERO)) != NULL) {
             count++;
             result = true;
         }
-        if ( p = column2Wins(ar, ZERO) != NULL) {
+        if ( (p = column2Wins(ar, ZERO)) != NULL) {
             result = true;
             count++;
         }
-        if ( p = row0Wins(ar, ZERO) != NULL) {
+        if ( (p = row0Wins(ar, ZERO)) != NULL) {
             result = true;
             count++;
         }
-        if ( p = row1Wins(ar, ZERO) != NULL) {
+        if ( (p = row1Wins(ar, ZERO)) != NULL) {
             result = true;
             count++;
         }
-        if ( p = row2Wins(ar, ZERO) != NULL) {
+        if ( (p = row2Wins(ar, ZERO)) != NULL) {
             result = true;
             count++;
         }
-        if ( p = diagnal1Wins(ar, ZERO) != NULL) {
+        if ( (p = diagnal1Wins(ar, ZERO)) != NULL) {
             result = true;
             count++;
         }
-        if ( p = diagnal2Wins(ar, ZERO) != NULL) {
+        if ( (p = diagnal2Wins(ar, ZERO)) != NULL) {
             result = true;
             count++;
         }
@@ -71,13 +88,16 @@ bool doesUserCompulsionAfterNextMove(int ar[3][3]) {
 
 }
 
-bool Engine::isGamePossible(int ar[][]) {
+bool Engine::isGamePossible(int ar[3][3]) {
 
     //check if already there are 3 zero or 3 cross
-    if (column(CROSS) + rows(CROSS) > 0 ||
-        column(ZERO) + rows(ZERO) > 0 ) {
+    printf ("\n -------------is game possible -start-\n");fflush(stdout);
+    if (column(ar, CROSS) + rows(ar, CROSS) > 0 ||
+        column(ar, ZERO) + rows(ar, ZERO) > 0 ) {
+    printf ("\n -------------is game possible true -end --\n");fflush(stdout);
         return true;
     }
+    printf ("\n -------------is game possible fale -end --\n");fflush(stdout);
     return false;
 
 }
@@ -100,42 +120,44 @@ bool Engine::isComputerWinning(int ar[3][3]) {
 }
 
 bool Engine::internalUserCompulsion(int ar[3][3], struct Param * pa, INPUT val) {
-    ar[pa->rows][pa->columns] = val;
+    int ro = pa->row;
+    int col = pa->column;
+    ar[ro][col] = val;
     return true;
 }
 
-bool Engine::UserWinCompulsion(int ar[3][3]) {
+bool Engine::userWinCompulsion(int ar[3][3]) {
         bool result = false;
         struct Param * p = NULL;
-        if ( p = column0Wins(ar, ZERO) != NULL) {
+        if ( (p = column0Wins(ar, ZERO)) != NULL) {
             internalUserCompulsion(ar, p, CROSS);
             result = true;
         }
-        if ( p = column1Wins(ar, ZERO) != NULL) {
+        if ( (p = column1Wins(ar, ZERO)) != NULL) {
             internalUserCompulsion(ar, p, CROSS);
             result = true;
         }
-        if ( p = column2Wins(ar, ZERO) != NULL) {
+        if ( (p = column2Wins(ar, ZERO)) != NULL) {
             internalUserCompulsion(ar, p, CROSS);
             result = true;
         }
-        if ( p = row0Wins(ar, ZERO) != NULL) {
+        if ( (p = row0Wins(ar, ZERO)) != NULL) {
             internalUserCompulsion(ar, p, CROSS);
             result = true;
         }
-        if ( p = row1Wins(ar, ZERO) != NULL) {
+        if ( (p = row1Wins(ar, ZERO)) != NULL) {
             internalUserCompulsion(ar, p, CROSS);
             result = true;
         }
-        if ( p = row2Wins(ar, ZERO) != NULL) {
+        if ( (p = row2Wins(ar, ZERO)) != NULL) {
             internalUserCompulsion(ar, p, CROSS);
             result = true;
         }
-        if ( p = diagnal1Wins(ar, ZERO) != NULL) {
+        if ( (p = diagnal1Wins(ar, ZERO)) != NULL) {
             internalUserCompulsion(ar, p, CROSS);
             result = true;
         }
-        if ( p = diagnal2Wins(ar, ZERO) != NULL) {
+        if ( (p = diagnal2Wins(ar, ZERO)) != NULL) {
             internalUserCompulsion(ar, p, CROSS);
             result = true;
         }
@@ -173,15 +195,13 @@ struct Param * Engine::calculateColumnWins(int ar[3][3], INPUT val , int ro) {
             }
       }
       if (count == 2 && result == true) {
-          p = new Param();
-          p->row = rows;
-          p->column = column;
+          p = new Param(rows, column);
           result = true;
       }
       return p;
 }
 
-struct Param* column0Wins(int ar[3][3], INPUT val) {
+struct Param* Engine::column0Wins(int ar[3][3], INPUT val) {
      return calculateColumnWins(ar, val , 0) ;
 }
 
@@ -221,10 +241,10 @@ struct Param * Engine::calculateRowWins(int ar[3][3], INPUT val, int colu) {
             }
       }
       if (count == 2 && result == true) {
-          p = new Param();
-          p->row = rows;
-          p->column = column;
+          p = new Param(rows, column);
           result = true;
+      }
+      return p;
 
 }
 
@@ -249,10 +269,11 @@ int Engine::diagnals(int ar[3][3], INPUT val) {
 		
 }
 
-bool Engine::diagnal1Wins(int ar[][], INPUT val) {
+struct Param* Engine::diagnal1Wins(int ar[3][3], INPUT val) {
 	bool result = false;
     int rows = 0;
     int column = 0;
+    int count = 0;
     INPUT value = CROSS;
     if (val == CROSS) {
         value = ZERO;
@@ -274,18 +295,17 @@ bool Engine::diagnal1Wins(int ar[][], INPUT val) {
             }
     }
     if (count == 2 && result == true) {
-        p = new Param();
-        p->rows = rows;
-        p->column = column;
+        p = new Param(rows, column);
     }
     return p;
 
 }
 
-struct Param * Engine::diagnal2Wins(int ar[][], INPUT val) {
+struct Param * Engine::diagnal2Wins(int ar[3][3], INPUT val) {
 	bool result = false;
     int rows = 0;
     int column = 0;
+    int count = 0;
     INPUT value = CROSS;
     if (val == CROSS) {
         value = ZERO;
@@ -293,7 +313,7 @@ struct Param * Engine::diagnal2Wins(int ar[][], INPUT val) {
         value = CROSS;
     }
     struct Param * p = NULL;
-    for (int j = 0, i = 2; j < 3, i > -1;j++ ,i--) {
+    for (int j = 0, i = 0; j < 3, i < 3;j++ ,i++) {
             if (ar[j][i] == val) { 
                 count++;
                 result = true;
@@ -307,9 +327,7 @@ struct Param * Engine::diagnal2Wins(int ar[][], INPUT val) {
             }
     }
     if (count == 2 && result == true) {
-        p = new Param();
-        p->rows = rows;
-        p->column = column;
+        p = new Param(rows, column);
     }
     return p;
 }
@@ -318,13 +336,16 @@ struct Param * Engine::diagnal2Wins(int ar[][], INPUT val) {
 
 bool Engine::diagnal1(int ar[3][3], INPUT val) {
 	bool result = false;
+    int count = 0;
+
     for (int j = 0, i = 2; j < 3, i > -1;j++ ,i--) {
             if (ar[i][j] == val ||
                 ar[i][j] == 0 ) {
-                count++
+                count++;
             }
     }
     if (count == 3) {
+        printf ("\n -----diagnal 1 is possible-:%d:-\n", val);fflush(stdout);
         result = true;
     }
 	return result;
@@ -332,34 +353,36 @@ bool Engine::diagnal1(int ar[3][3], INPUT val) {
 
 bool Engine::diagnal2(int ar[3][3], INPUT val) {
 	bool result = false;
-    for (int j = 0, i = 2; j < 3, i > -1;j++ ,i--) {
+    int count = 0;
+    for (int j = 0, i = 0; j < 3, i < 3;j++ ,i++) {
             if (ar[j][i] == val ||
                 ar[j][i] == 0 ) {
-                count++
+                count++ ;
             }
     }
     if (count == 3) {
+        printf ("\n -----diagnal 2 is possible-:%d:-\n", val);fflush(stdout);
            result = true;
     }
 	return result;
 }
 
-int Engine::rows(INPUT val) {
+int Engine::rows(int ar[3][3], INPUT val) {
 	int count = 0;
-	if ( row0Contain(val)) {
+	if ( row0Contains(ar, val)) {
 		count++;
 	}
-	if (row1Contain(val)) {
+	if (row1Contains(ar, val)) {
 		count++;
 	}
-	if (row2Contain(val)) {
+	if (row2Contains(ar, val)) {
 		count++;
 	}
 	return count;
 
 }
 
-bool row0Contains(int ar[3][3], INPUT val) {
+bool Engine::row0Contains(int ar[3][3], INPUT val) {
       int j = 0;
       bool result = false;
       int count = 0;
@@ -370,12 +393,13 @@ bool row0Contains(int ar[3][3], INPUT val) {
             }
       }
       if (count == 3) {
+          printf ("\n ---row-- 0 for :%d: --\n", val);fflush(stdout);
           result = true;
       }
       return result;
 }
 
-bool row1Contains(int ar[3][3], INPUT val) {
+bool Engine::row1Contains(int ar[3][3], INPUT val) {
       int j = 1;
       bool result = false;
       int count = 0;
@@ -386,12 +410,13 @@ bool row1Contains(int ar[3][3], INPUT val) {
             }
       }
       if (count == 3) {
+          printf ("\n ---row--1 for :%d: --\n", val);fflush(stdout);
           result = true;
       }
       return result;
 }
 
-bool row2Contains(int ar[3][3], INPUT val) {
+bool Engine::row2Contains(int ar[3][3], INPUT val) {
       int j = 2;
       bool result = false;
       int count = 0;
@@ -402,21 +427,22 @@ bool row2Contains(int ar[3][3], INPUT val) {
             }
       }
       if (count == 3) {
+          printf ("\n ---row--2 for :%d: --\n", val);fflush(stdout);
           result = true;
       }
       return result;
 }
 
-int Engine::column(INPUT val) {
+int Engine::column(int ar[3][3], INPUT val) {
 
 	int count = 0;
-	if (colum0Contains(val)) {
+	if (column0Contains( ar, val)) {
 		count++;
 	}
-	if (colum1Contains(val)) {
+	if (column1Contains(ar, val)) {
 		count++;
 	}
-	if (colum2Contains(val)) {
+	if (column2Contains(ar, val)) {
 		count++;
 	}
 
@@ -424,7 +450,7 @@ int Engine::column(INPUT val) {
 
 }	
 
-bool column0Contains(int ar[3][3], INPUT val) {
+bool Engine::column0Contains(int ar[3][3], INPUT val) {
       int j = 0;
       bool result = false;
       int count = 0;
@@ -435,12 +461,13 @@ bool column0Contains(int ar[3][3], INPUT val) {
             }
       }
       if (count == 3) {
+          printf ("\n ---column--0 for :%d: --\n", val);fflush(stdout);
           result = true;
       }
       return result;
 }
 
-bool column1Contains(int ar[3][3], INPUT val) {
+bool Engine::column1Contains(int ar[3][3], INPUT val) {
       int j = 1;
       bool result = false;
       int count = 0;
@@ -448,16 +475,18 @@ bool column1Contains(int ar[3][3], INPUT val) {
             if (ar[i][j] == val || 
              ar[i][j] == 0 ) {
                 count++;
+            }
             
       }
       if (count == 3) {
+          printf ("\n ---column--1 for :%d: --\n", val);fflush(stdout);
           result = true;
       }
       return result;
 }
 
 
-bool column2Contains(int ar[3][3], INPUT val) {
+bool Engine::column2Contains(int ar[3][3], INPUT val) {
       int j = 2;
       bool result = false;
       int count = 0;
@@ -468,6 +497,7 @@ bool column2Contains(int ar[3][3], INPUT val) {
             }
       }
       if (count == 3) {
+          printf ("\n ---column--2 for :%d: --\n", val);fflush(stdout);
           result = true;
       }
       return result;

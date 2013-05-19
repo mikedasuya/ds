@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "engine.h"
 #include "Common.h"
+#include "controller.h"
 
 using namespace ENGINE;
 
@@ -34,15 +35,18 @@ int main() {
 		    };
 	int ch;
 	int row;
-	int coulmn;
+	int coul;
 	contr = new Controller();
 	while (ch != 10) {
 		printf("\n enter the row number \n");fflush(stdout);
 		scanf ("%d", &row);
 		printf("\n enter the column number \n");fflush(stdout);
-		scanf ("%d", &column);
+		scanf ("%d", &coul);
 		ch = row;
-		ar[row][column] = CROSS;
+        if (ch == 10) {
+            break;
+        }
+		ar[row][coul] = ZERO;
 		printGame(ar);
 		calculateComputerMove(ar);
 		printGame(ar);
