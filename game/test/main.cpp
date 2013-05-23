@@ -40,11 +40,23 @@ int main() {
 	while (ch != 10) {
 		printf("\n enter the row number \n");fflush(stdout);
 		scanf ("%d", &row);
+        if (row < 0 || row > 2) {
+            printf ("\n ---row hs to be between 0 & 2 --\n");fflush(stdout);
+            continue;
+        }
 		printf("\n enter the column number \n");fflush(stdout);
 		scanf ("%d", &coul);
+        if (coul < 0 || coul > 2) {
+            printf ("\n ---column hs to be between 0 & 2 --\n");fflush(stdout);
+            continue;
+        }
 		ch = row;
         if (ch == 10) {
             break;
+        }
+        if (ar[row][coul] != 0) {
+            printf("\n Already entry exisists, cannot override \n");fflush(stdout);
+            continue;
         }
 		ar[row][coul] = ZERO;
 		printGame(ar);

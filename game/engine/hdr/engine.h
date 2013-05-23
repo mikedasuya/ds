@@ -38,7 +38,8 @@ class Engine {
 	int evaluateState(int ar[3][3]);
     bool isGamePossible(int ar[3][3]);
     bool isComputerWinning(int ar[3][3]);
-    bool userWinCompulsion(int ar[3][3]);
+    struct Param *  userWinCompulsion(int ar[3][3]);
+    struct Param *  computerWinCompulsion(int ar[3][3]);
 	
 };
 

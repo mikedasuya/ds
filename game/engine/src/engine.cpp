@@ -31,15 +31,40 @@ int Engine::evaluateState(int ar[3][3]) {
 	diagnal = diagnals(ar, ZERO);
 	int sumZ = columnC+rowsC+diagnal;
 	printf ("\n ------total for  ZERO-:%d:--\n", sumZ);fflush(stdout);
-    if (userWinCompulsion(ar)) {
-        if (doesUserWinsInNextMove(ar)) {
-            return -20;
+    struct Param * p = computerWinCompulsion(ar);
+    if ( p!= NULL) {
+        printGame(ar);
+        int row = p->row;
+        int column = p->column;
+        ar[row][column] = ZERO;
+        struct Param * p1 = userWinCompulsion(ar);
+        if ( p1 != NULL) {
+            int ro = p1->row;
+            int co = p1->column;
+            ar[ro][co] = CROSS;
+            if (doesUserWinsInNextMove(ar)) {
+                printGame(ar);
+                ar[ro][co] = 0;
+                ar[row][column] = 0;
+                return -20;
+            } else {
+                printf("\n ---does user wins in next move-- false -");fflush(stdout);
+                ar[ro][co] = 0;
+                ar[row][column] = 0;
+            }
+
+        } else {
+           printf("\n -------User win compulsion p = NULL");fflush(stdout);
+           ar[row][column] = 0;
+
         }
+    } else {
+           printf("\n -------Computer win compulsion p = NULL");fflush(stdout);
     }
     printGame(ar);
 	printf ("\n ------difference-:%d:--\n", sum - sumZ);fflush(stdout);
     int ch;
-    scanf("%d", &ch);
+//    scanf("%d", &ch);
 	return sum - sumZ;
 }
 
@@ -79,9 +104,11 @@ bool Engine::doesUserWinsInNextMove(int ar[3][3]) {
             result = true;
             count++;
         }
-        if (result == true && count == 2) {
+        if (result == true && count == 1) {
+            printf("\n -----user win next move --true \n");fflush(stdout);
             result = true;
         } else {
+            printf("\n -----user win next move --false\n");fflush(stdout);
             result = false;
         }
         return result;
@@ -123,45 +150,79 @@ bool Engine::internalUserCompulsion(int ar[3][3], struct Param * pa, INPUT val) 
     return true;
 }
 
-bool Engine::userWinCompulsion(int ar[3][3]) {
+struct Param * Engine::computerWinCompulsion(int ar[3][3]) {
+        bool result = false;
+        struct Param * p = NULL;
+        if ( (p = column0Wins(ar, CROSS)) != NULL) {
+       //     internalUserCompulsion(ar, p, CROSS);
+            result = true;
+        } else if ( (p = column1Wins(ar, CROSS)) != NULL) {
+      //      internalUserCompulsion(ar, p, CROSS);
+            result = true;
+        } else if ( (p = column2Wins(ar, CROSS)) != NULL) {
+        //    internalUserCompulsion(ar, p, CROSS);
+            result = true;
+        } else if ( (p = row0Wins(ar, CROSS)) != NULL) {
+          //  internalUserCompulsion(ar, p, CROSS);
+            result = true;
+        } else if ( (p = row1Wins(ar, CROSS)) != NULL) {
+       //     internalUserCompulsion(ar, p, CROSS);
+            result = true;
+        } else if ( (p = row2Wins(ar, CROSS)) != NULL) {
+         //   internalUserCompulsion(ar, p, CROSS);
+            result = true;
+        } else if ( (p = diagnal1Wins(ar, CROSS)) != NULL) {
+           // internalUserCompulsion(ar, p, CROSS);
+            result = true;
+        } else if ( (p = diagnal2Wins(ar, CROSS)) != NULL) {
+         //   internalUserCompulsion(ar, p, CROSS);
+            result = true;
+        } 
+        
+        if (result == true) {
+            printf("\n ---------computer win compulsion  true--\n");fflush(stdout);
+        } else {
+            printf("\n ---------computer win compulsion -false -\n");fflush(stdout);
+        }
+
+        return p;
+
+}
+
+struct Param* Engine::userWinCompulsion(int ar[3][3]) {
         bool result = false;
         struct Param * p = NULL;
         if ( (p = column0Wins(ar, ZERO)) != NULL) {
             internalUserCompulsion(ar, p, CROSS);
             result = true;
-        }
-        if ( (p = column1Wins(ar, ZERO)) != NULL) {
+        } else if ( (p = column1Wins(ar, ZERO)) != NULL) {
             internalUserCompulsion(ar, p, CROSS);
             result = true;
-        }
-        if ( (p = column2Wins(ar, ZERO)) != NULL) {
+        } else if ( (p = column2Wins(ar, ZERO)) != NULL) {
             internalUserCompulsion(ar, p, CROSS);
             result = true;
-        }
-        if ( (p = row0Wins(ar, ZERO)) != NULL) {
+        } else if ( (p = row0Wins(ar, ZERO)) != NULL) {
             internalUserCompulsion(ar, p, CROSS);
             result = true;
-        }
-        if ( (p = row1Wins(ar, ZERO)) != NULL) {
+        } else if ( (p = row1Wins(ar, ZERO)) != NULL) {
             internalUserCompulsion(ar, p, CROSS);
             result = true;
-        }
-        if ( (p = row2Wins(ar, ZERO)) != NULL) {
+        } else if ( (p = row2Wins(ar, ZERO)) != NULL) {
             internalUserCompulsion(ar, p, CROSS);
             result = true;
-        }
-        if ( (p = diagnal1Wins(ar, ZERO)) != NULL) {
+        } else if ( (p = diagnal1Wins(ar, ZERO)) != NULL) {
             internalUserCompulsion(ar, p, CROSS);
             result = true;
-        }
-        if ( (p = diagnal2Wins(ar, ZERO)) != NULL) {
+        } else if ( (p = diagnal2Wins(ar, ZERO)) != NULL) {
             internalUserCompulsion(ar, p, CROSS);
             result = true;
         }
         if (result == true) {
-            printf("\n ---------user win compulsion --\n");fflush(stdout);
+            printf("\n ---------user win compulsion  true--\n");fflush(stdout);
+        } else {
+            printf("\n ---------user win compulsion -false -\n");fflush(stdout);
         }
-        return result;
+        return p;
 
 }
 

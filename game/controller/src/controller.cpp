@@ -4,6 +4,8 @@
 #include <utility>
 #include "engine.h"
 #include <iterator>
+#include <stdio.h>
+#include <stdlib.h>
 
 using namespace std;
 
@@ -29,7 +31,7 @@ int Controller::nextMove( int ar[3][3]) {
     if (eng->isComputerWinning(ar)){
         return -3;
     }
-    if (eng->userWinCompulsion(ar)) {
+    if (eng->userWinCompulsion(ar) != NULL) {
         return 1;
     }
 	for (int i = 0; i < 3 ; i++) {
@@ -62,6 +64,7 @@ void Controller::evaluateState(int ar[3][3], int row, int column) {
             //comp will evaluate
             int result = eng->evaluateState(ar);
             //if comp wins go back
+            printf("\n ---------result ------of evaluate is :%d: \n", result);fflush(stdout);
             if (result != -20) {
                 addNode(ar, row, column, result);
             }
