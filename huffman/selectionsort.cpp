@@ -37,7 +37,13 @@ bool selectionSort(T ar[], int size) {
 	}
 	for (int i = 0; i <= size; i++) {
 					
-		T obj = ar[]
+		T obj = ar[i];
+		for (int j = 0; j < i; j++) {
+			if (ar[i].key > obj.i) {
+				for (int k = 0; k <
+			}
+		}
+
 	}
 
 }
