@@ -1,5 +1,8 @@
 
 
+avl:
+	g++ -g avialTree.cpp traverse.cpp
+
 tree:
 	g++ -g tree.cpp stack.cpp 
 convert:

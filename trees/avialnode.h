@@ -1,20 +1,22 @@
-#ifndef __AVIAL_NODE_H
-#define __AVIAL_NODE_H
+#ifndef __AVIAL_NODE_H1
+#define __AVIAL_NODE_H1
 
-struct AVNode {
-	AVNode * lptr;
-	AVNode * rptr;
-	AVNode * parent;
+#include <cstddef>
+
+struct AVLNode {
+	AVLNode * lptr;
+	AVLNode * rptr;
+	AVLNode * parent;
 	int data;
 	int balance;
-	AVNode(int dat) {
+	AVLNode(int dat) {
 		lptr = NULL;
 		rptr = NULL;
 		parent = NULL;
 		data = dat;
 		balance = 99;
 	}
-	~AVNode() {
+	~AVLNode() {
 		//delete lptr;
 		//delete rptr;
 		

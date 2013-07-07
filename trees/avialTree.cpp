@@ -1,32 +1,54 @@
 #include "stack.h"
+#include "avialnode.h"
+#include "traverse.h"
+#include "stdio.h"
+#include "stdlib.h"
 
+
+AVLNode * addNode(AVLNode * root, int data);
+bool caluclateandBalanceInternal(AVLNode * ptr);
+int calculateLevel(AVLNode * ptr);
+bool addLevel(AVLNode * ptr, stack<AVLNode*> * childNodeStack);
+AVLNode * rightleftRotationInternal(AVLNode * ptr);
+bool rightleftRotation(AVLNode * ptr1);
+AVLNode * rightrightRotationInternal(AVLNode * ptr);
+bool rightrightRotation(AVLNode * ptr);
+AVLNode * leftleftRotationInternal1(AVLNode * ptr);
+bool leftleftRotation1(AVLNode * ptr);
+AVLNode * leftrightRotationInternal1(AVLNode * ptr);
+bool leftrightRotation(AVLNode * ptr);
+
+bool balanceTree(AVLNode * ptr);
+AVLNode * g_root = NULL;
 int main() {
-	int ar [7] = {9, 4, 3, 2, 1, 13, 12, 11, 14,17 };
-	AVNode * root = NULL;
+	int ar [10] = {9, 4, 3, 2, 1, 13, 12, 11, 14,17 };
+	AVLNode * root = NULL;
 	for (int i = 0; i < 7; i++) {
-		int input = ar[i];
+		int data = ar[i];
 		if (root == NULL) {
-			root = new AVNode(data);
+			root = new AVLNode(data);
+			g_root = root;
 			continue;
 		}
-		AVNode * ptr = addNode(root, input);
-		AVNode * parentNode = ptr->parent;
+		AVLNode * ptr = addNode(root, data);
+		AVLNode * parentNode = ptr->parent;
 		while (parentNode != NULL) {
 			caluclateandBalanceInternal(parentNode);
 			parentNode = parentNode->parent; 
 		}
 	}
+	traverse(g_root);
 }
 
-bool calculateandBalanceInternal(Node * ptr) {
+bool caluclateandBalanceInternal(AVLNode * ptr) {
 	int leftlevel = 0;
 	if (ptr->lptr != NULL) {
-		leftlevel = calculate(ptr->left);
+		leftlevel = calculateLevel(ptr->lptr);
 		leftlevel = leftlevel + 1;
 	}
 	int rightlevel = 0;
 	if (ptr->rptr != NULL) {
-		 rightlevel = calculate(ptr->rptr);
+		 rightlevel = calculateLevel(ptr->rptr);
 		 rightlevel = rightlevel + 1;
 	}
 	ptr->balance =  leftlevel - rightlevel;
@@ -36,200 +58,156 @@ bool calculateandBalanceInternal(Node * ptr) {
 	} else if (ptr->balance == 2) {
 		balanceTree(ptr);
 	} else if (ptr->balance == -2) {
-
+		balanceTree(ptr);
 	}
 }
 
-bool leftleftRotation(AVLNode * ptr) {
-	if (ptr->left == NULL) {
-		printf("\n ----left left rotation error there is error ---\n");fflush(stdout);
-		return false;
-	} 
-	AVLNode * parent = ptr->parent;
+//-2 +1
+AVLNode * rightleftRotationInternal(AVLNode * ptr) {
+
+			//right shift
+			AVLNode * movePtr = ptr->rptr->lptr->rptr;	
+			
+			AVLNode * ptrmiddle = ptr->rptr;
+			
+			ptr->rptr = ptr->rptr->lptr;
+
+			ptr->rptr->rptr = ptrmiddle;
+
+			ptrmiddle->lptr = movePtr;
+
+			if (ptr->rptr->rptr->lptr != NULL) {
+				ptr->rptr->rptr->lptr->parent = ptr->rptr->rptr;
+			}
+			if (ptr->rptr->rptr != NULL) {
+				ptr->rptr->rptr->parent = ptr->rptr;
+			}
+			if (ptr->rptr != NULL) {
+				ptr->rptr->parent = ptr;
+			}
+			
+			//left shift
+			AVLNode * leftptr = ptr->rptr->lptr;
+			AVLNode * mainPtr = ptr->rptr;
+			mainPtr->lptr = ptr;
+			ptr->rptr = leftptr;
+
+			if (ptr->rptr != NULL) {
+				ptr->rptr->parent = ptr;
+			}
+			ptr->parent = mainPtr;
+
+			return mainPtr;
+}
+
+//-2 + 1
+bool rightleftRotation(AVLNode * ptr1) {
+
+	AVLNode * parent = ptr1->parent;
 	if (parent == NULL) {
-			root = ptr->rptr;
-			AVLNode * rptrRoot = root->lptr;
-			root->lptr = ptr;
-			ptr->rptr = rptrRoot;
+		AVLNode * ptr = rightleftRotationInternal(ptr1);
+		g_root = ptr;
+		g_root->parent = NULL;
+	} else if ( parent->lptr != NULL && (parent->lptr->data == ptr1->data) ) {
+
+		AVLNode * ptr = rightleftRotationInternal(ptr1);
+		parent->lptr = ptr;
+		parent->lptr->parent = parent;
+
+	} else if (parent->rptr != NULL && parent->rptr->data == ptr1->data) {
+		AVLNode * ptr = rightleftRotationInternal(ptr1);
+		parent->rptr = ptr;
+		parent->rptr->parent = parent;
+	}
+}
+
+AVLNode * rightrightRotationInternal(AVLNode * ptr) {
+			
+			AVLNode * parentPtr = ptr->parent;
+			//left shift
+			AVLNode * leftptr = ptr->rptr->lptr;
+			AVLNode * mainPtr = ptr->rptr;
+			mainPtr->lptr = ptr;
+			ptr->rptr = leftptr;
+
 			if (ptr->rptr != NULL) {
 				ptr->rptr->parent = ptr;
 			}
-			ptr->parent = root;
-			root->parent = NULL;
+			ptr->parent = mainPtr;
+			return mainPtr;
+}
+//-2 -1
+bool rightrightRotation (AVLNode * ptr) {
+			
+			AVLNode * parent = ptr->parent;
+			if (parent == NULL) {
+				AVLNode * ptr = rightrightRotationInternal(ptr);
+				g_root = ptr;
+				g_root->parent = NULL;
+			} else if (parent->rptr != NULL && parent->rptr->data == ptr->data) {
+				
+				AVLNode * ptr = rightrightRotationInternal(ptr);
+				parent->rptr = ptr;
+				parent->rptr->parent = parent;
 
-	} else {
+			} else if (parent->lptr != NULL && parent->lptr->data == ptr->data) {
 
-		if (parent->lptr != NULL && parent->lptr->data == ptr->data) {
+				AVLNode * ptr = rightrightRotationInternal(ptr);
+				parent->lptr = ptr;
+				parent->lptr->parent = parent;
 
-			parent->lptr = ptr->rptr;
-			ptr->parent = parent->lptr;
-
-			AVLNode * rptrRoot = ptr->rptr->lptr;
-			ptr->rptr = rptrRoot;
-			if (ptr->rptr != NULL) {
-				ptr->rptr->parent = ptr;
 			}
-			parent->lptr->lptr = ptr;
+	return true;
+}
 
-			parent->lptr->parent = parent;
+AVLNode * leftleftRotationInternal1(AVLNode * ptr) {
+		
+		AVLNode * rootptr = ptr->lptr;
+		AVLNode * tempNode = rootptr->rptr;
+		rootptr->rptr = ptr;
+		ptr->lptr = tempNode;
 
-		} else if (parent->rptr != NULL && parent->rptr->data == ptr->data) {
-			
-			
-			parent->rptr = ptr->rptr;
-			ptr->parent = parent->rptr;
-
-			AVLNode * rptrRoot = ptr->rptr->lptr;
-			
-			ptr->rptr = rptrRoot;
-			ptr->rptr->parent = ptr;
-			parent->rptr->lptr = ptr;
-			parent->rptr->parent = parent;
-
+		if (ptr->lptr != NULL) {
+			ptr->lptr->parent = ptr;
 		}
 
-	}
+		if (rootptr->rptr != NULL) {
+			rootptr->rptr->parent = rootptr; 
+		}
+		return rootptr;
+
 }
 
-bool rightrightRotation(AVLNode * ptr) {
+bool leftleftRotation1(AVLNode * ptr) {
 	AVLNode * parent = ptr->parent;
 	if (parent == NULL) {
 		if (ptr->lptr == NULL) {
 			printf("\n ----error ---right rotation not possible\n");fflush(stdout);
 			return false;
 		}
-		root = ptr->lptr;
-		root->parent = NULL;
-		AVLNode * tempNode = root->rptr;
-		root->rptr = ptr;
-		ptr->parent = root;
-		ptr->lptr = tempNode;
-		if (ptr->lptr != NULL) {
-			ptr->lptr->parent = ptr;
-		}
+		g_root = leftleftRotationInternal1(ptr);
+		g_root->parent = NULL;
 
 	} else if (parent != NULL) {
 		if (parent->lptr != NULL && parent->lptr->data == ptr->data) {
-
-			AVLNode * root = ptr->lptr;
-			root->parent = parent;
-			AVLNode * tempNode = root->rptr;
-			root->rptr = ptr;
-			ptr->parent = root;
-			ptr->lptr = tempNode;
-			if (ptr->lptr != NULL) {
-				ptr->lptr->parent = ptr;
-			}
-			parent->lptr = root;
+			AVLNode * ptr = leftleftRotationInternal1(ptr);
+			parent->lptr = ptr;
+			ptr->parent = parent;
 		} else if (parent->rptr != NULL && parent->rptr->data == ptr->data) {
 
-			AVLNode * root = ptr->lptr;
-			root->parent = parent;
-			AVLNode * tempNode = root->rptr;
-			root->rptr = ptr;
-			ptr->parent = root;
-			ptr->lptr = tempNode;
-			if (ptr->lptr != NULL) {
-				ptr->lptr->parent = ptr;
-			}
-			parent->rptr = root;
+			AVLNode * ptr = leftleftRotationInternal1(ptr);
+			parent->rptr = ptr;
+			ptr->parent = parent;
 		}
 
 	}
+	return true;
 }
 
-bool leftRightRotation(AVLNode * ptr) {
-	if (ptr->parent == NULL) {
-		/////first left rotation
-		AVLNode* temp = ptr->lptr;
-		AVLNode * leftOfthird = temp->rptr->lptr;
-		ptr->lptr = temp->rptr;
-		ptr->lptr->lptr = temp;
-		temp->rptr = leftOfthird;
-
-		if (temp->rptr != NULL) {
-			temp->rptr->parent = temp;
-		}
-		temp->parent = ptr->lptr;
-		ptr->lptr->parent = ptr;
-		////right rotation
-		AVLNode * localroot = ptr->lptr;
-		AVLNode * temp1 = localroot->rptr;
-
-		localroot->rptr = ptr;
-
-		ptr->lptr = temp1;
-
-		localroot->parent = NULL;
-		
-		ptr->parent = localroot;
-		if (ptr->lptr != NULL) {
-			ptr->lptr->parent = ptr;
-		}
-
-
-	} else if (ptr->parent != NULL &&
-	           parent->rptr != NULL &&
-			   parent->rptr->data == ptr->data) {
-		AVLNode* temp = ptr->lptr;
-		AVLNode * leftOfthird = temp->rptr->lptr;
-		ptr->lptr = temp->rptr;
-		ptr->lptr->lptr = temp;
-		temp->rptr = leftOfthird;
-
-		if (temp->rptr != NULL) {
-			temp->rptr->parent = temp;
-		}
-		temp->parent = ptr->lptr;
-		ptr->lptr->parent = ptr;
-		////right rotation
-		AVLNode * localroot = ptr->lptr;
-		AVLNode * temp1 = localroot->rptr;
-
-		localroot->rptr = ptr;
-
-		ptr->lptr = temp1;
-		ptr->parent = localroot;
-		if (ptr->lptr != NULL) {
-			ptr->lptr->parent = ptr;
-		}
-
-		parent->rptr = localroot;
-		localroot->parent = parent;
-	} else if (ptr->parent != NULL &&
-	           parent->lptr != NULL &&
-			   parent->lptr->data == ptr->data) {
-		AVLNode* temp = ptr->lptr;
-		AVLNode * leftOfthird = temp->rptr->lptr;
-		ptr->lptr = temp->rptr;
-		ptr->lptr->lptr = temp;
-		temp->rptr = leftOfthird;
-
-		if (temp->rptr != NULL) {
-			temp->rptr->parent = temp;
-		}
-		temp->parent = ptr->lptr;
-		ptr->lptr->parent = ptr;
-		////right rotation
-		AVLNode * localroot = ptr->lptr;
-		AVLNode * temp1 = localroot->rptr;
-
-		localroot->rptr = ptr;
-
-		ptr->lptr = temp1;
-		ptr->parent = localroot;
-		if (ptr->lptr != NULL) {
-			ptr->lptr->parent = ptr;
-		}
-
-		parent->rptr = localroot;
-		localroot->parent = parent;
-	}
-}
-
-AVLNode * rightleftRotationInternal(AVLNode * ptr) {
+// 2 -1
+AVLNode * leftrightRotationInternal1(AVLNode * ptr) {
 	
-	//right shift
+	//left shift 2 -1
 	AVLNode * thirdleftptr = ptr->lptr->rptr->lptr;
 	AVLNode * secondptr = ptr->lptr;
 	ptr->lptr = ptr->lptr->rptr;
@@ -238,77 +216,85 @@ AVLNode * rightleftRotationInternal(AVLNode * ptr) {
 	
 	ptr->lptr->lptr->rptr = thirdleftptr;
 	if (ptr->lptr->lptr->rptr != NULL) {
-		ptr->lptr->lptr->rptr->parent = lptr->lptr->lptr;
+		secondptr->rptr->parent = secondptr;
+	}
+	if (ptr->lptr->lptr->lptr != NULL) {
+		ptr->lptr->lptr->lptr->parent = ptr->lptr->lptr;
 	}
 
 	ptr->lptr->lptr->parent = ptr->lptr;
+	if (ptr->lptr->rptr != NULL) {
+		ptr->lptr->rptr->parent = ptr->lptr;
+	}
+
 	ptr->lptr->parent = ptr;
 
-	//left shift
+	//right shift
 	AVLNode * temp1 = ptr->lptr;
-
 	AVLNode * temprptr = temp1->rptr;
-
 	temp1->rptr = ptr;
+	ptr->lptr = temprptr;
 
-	ptr->rptr = temprptr;
-	if (ptr->rptr != NULL) {
-		ptr->rptr->parent = ptr;
+	if (ptr->lptr != NULL) {
+		ptr->lptr->parent = ptr;
 	}
 	ptr->parent = temp1;
+
+	if (temp1->rptr != NULL) {
+		temp1->rptr->parent = temp1;
+	}
+
 	return temp1;
 
 }
 
 
-bool rightleftRotation(AVLNode * ptr) {
+bool leftrightRotation1(AVLNode * ptr) {
 	AVLNode * parent = ptr->parent;
 	if (ptr->parent == NULL) {
 
-		root = rightleftRotationInernal(ptr);
-		root->parent = NULL;
+		g_root = leftrightRotationInternal1(ptr);
+		g_root->parent = NULL;
 
 	} else if (ptr->parent != NULL && ptr->parent->lptr != NULL && 
 	            ptr->parent->lptr->data == ptr->data) {
-		AVLNode * ptr1 = rightleftRotationInternal(ptr);
+		AVLNode * ptr1 = leftrightRotationInternal1(ptr);
 		parent->lptr = ptr1;
 		ptr1->parent = parent;
 
 	} else if (ptr->parent != NULL && ptr->parent->rptr != NULL &&
 				ptr->parent->rptr->data == ptr->data) {
-		AVLNode * ptr1 = rightleftRotationInternal(ptr);
+		AVLNode * ptr1 = leftrightRotationInternal1(ptr);
 		parent->rptr = ptr1;
 		ptr1->parent = parent;
 
 	}
 }
 
-bool balance(AVLNode * ptr) {
+bool balanceTree(AVLNode * ptr) {
 	if (ptr->balance == 2) {
-		int balance = calulateLevel(ptr->left);
+		int balance = calculateLevel(ptr->lptr);
 		if (balance == 1) {
-			rightrightRotation(ptr);			
+			leftleftRotation1(ptr);			
 		} else if (balance == -1) {
-			rightleftRotation(ptr);
+			leftrightRotation1(ptr);
 		}
-	}
-
 	} else if (ptr->balance == -2) {
 
-		int balance = calulateLevel(ptr->left);
+		int balance = calculateLevel(ptr->rptr);
 		if (balance == 1) {
-			leftRightRotation(ptr);
+			rightleftRotation(ptr);
 		} else if (balance == -1) {
-			leftleftRotation(ptr);
+			rightrightRotation(ptr);
 		}
 	} else {
-		printf("\n ------balancing ---\n",
+		printf("\n ------balancing error---\n");fflush(stdout);
 	}
 }
 
 
 
-bool addLevel(AVNode * ptr, stack<AVNode*> * childNodeStack) {
+bool addLevel(AVLNode * ptr, stack<AVLNode*> * childNodeStack) {
 	if (ptr->lptr == NULL && ptr->rptr == NULL) {
 	} else if (ptr->lptr != NULL && ptr->rptr == NULL) {
 		childNodeStack->push(ptr->lptr);
@@ -319,27 +305,22 @@ bool addLevel(AVNode * ptr, stack<AVNode*> * childNodeStack) {
 		childNodeStack->push(ptr->rptr);
 	}
 }
-int calculateLevel(AVNode * ptr) {
+
+int calculateLevel(AVLNode * ptr) {
 	int level = 0;
-	stack<stack<AVNode*>* > stack_of_stack = new stack<stack<AVNode*>*>();
-	stack<AVNode*> * childNode = new stack<AVNode*>();
+	stack<stack<AVLNode*>* > * stack_of_stack = new stack<stack<AVLNode*>*>();
+	stack<AVLNode*> * childNode = new stack<AVLNode*>();
 	addLevel(ptr, childNode);
 	if (childNode->size() > 0) {
 		level++;
 		stack_of_stack->push(childNode);
 	}
 	while (stack_of_stack->size() > 0) {
-		stack<AVNode*> st = stack_of_stack->pop();
-		stack<AVNode*> * childNode = new stack<AVNode*>();
+		stack<AVLNode*>* st = stack_of_stack->pop();
+		stack<AVLNode*>* childNode = new stack<AVLNode*>();
 		while (st->size() > 0) {
-			AVNode * nodePtr = st->pop();
-			if (nodePtr->lptr != NULL) {
-				addLevel(nodePtr->lptr, childNode);
-			}
-			if (nodePtr->rptr != NULL) {
-				addLevel(nodePtr->rptr, childNode);
-			}
-
+			AVLNode * nodePtr = st->pop();
+			addLevel(nodePtr, childNode);
 		}
 		if (childNode->size() > 0) {
 			level++;
@@ -351,26 +332,27 @@ int calculateLevel(AVNode * ptr) {
 	return level;
 }
 
-AVNode * addNode(AVNode * root, int data) {
-	AVNode * ptr = root;
+AVLNode * addNode(AVLNode * root, int data) {
+	AVLNode * ptr = root;
 	if (data < ptr->data) {
 		if (ptr->lptr == NULL) {
-			AVNode * ptr1 = new AVNode(data);
+			AVLNode * ptr1 = new AVLNode(data);
 			ptr->lptr = ptr1;
 			ptr1->parent = ptr;
 			return ptr1;
 		} else if (ptr->lptr != NULL) {
-			addNode(ptr->lptr);
+			addNode(ptr->lptr, data);
 		}
 	} else if (data > ptr->data) {
 		if (ptr->rptr == NULL) {
-			AVNode * ptr2 = new AVNode(data);
+			AVLNode * ptr2 = new AVLNode(data);
 			ptr->rptr = ptr2;
 			ptr2->parent = ptr;
 			return ptr2;
 
 		} else if (ptr->rptr != NULL) {
-			addNode(ptr->rptr);
+			addNode(ptr->rptr, data);
 		}
 	}
+	return NULL;
 }

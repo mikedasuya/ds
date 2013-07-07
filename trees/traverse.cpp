@@ -4,7 +4,7 @@
 #include "stack.h"
 #include "node.h"
 #include "queue.h"
-
+#include "avialnode.h"
 
 void traverse(node * root) {
 	stack<node*>* st = new stack<node*>();
@@ -25,6 +25,24 @@ void traverse(node * root) {
 
 }
 
+void traverse(AVLNode * root) {
+	stack<AVLNode*>* st = new stack<AVLNode*>();
+	st->push(root);
+        AVLNode * ptr = root;
+	while (st->size() > 0) {
+		while (ptr->lptr != NULL) {
+			ptr = ptr->lptr;
+			st->push(ptr);
+		}
+		AVLNode * elem = st->pop();
+		printf("\n ----Vl--:%d: \n",elem->data);
+		if (elem->rptr != NULL) {
+			st->push(elem->rptr);
+			ptr = elem->rptr;
+		}
+	}
+
+}
 
 void convertTreeToArray(node * root) {
 	Queue<int>* baseQueue = new Queue<int>();
