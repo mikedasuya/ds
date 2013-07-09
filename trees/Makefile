@@ -1,6 +1,6 @@
 
 
-avl:
+avial:
 	g++ -g avialTree.cpp traverse.cpp
 
 tree:

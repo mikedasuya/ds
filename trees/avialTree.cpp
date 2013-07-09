@@ -23,14 +23,15 @@ AVLNode * g_root = NULL;
 int main() {
 	int ar [10] = {9, 4, 3, 2, 1, 13, 12, 11, 14,17 };
 	AVLNode * root = NULL;
-	for (int i = 0; i < 7; i++) {
+	for (int i = 0; i < 9; i++) {
 		int data = ar[i];
 		if (root == NULL) {
 			root = new AVLNode(data);
 			g_root = root;
 			continue;
 		}
-		AVLNode * ptr = addNode(root, data);
+		AVLNode * ptr = addNode(g_root, data);
+		ptr->balance = 0;
 		AVLNode * parentNode = ptr->parent;
 		while (parentNode != NULL) {
 			caluclateandBalanceInternal(parentNode);
@@ -41,6 +42,8 @@ int main() {
 }
 
 bool caluclateandBalanceInternal(AVLNode * ptr) {
+
+	AVLNode * ptr1 = ptr;
 	int leftlevel = 0;
 	if (ptr->lptr != NULL) {
 		leftlevel = calculateLevel(ptr->lptr);
@@ -51,6 +54,7 @@ bool caluclateandBalanceInternal(AVLNode * ptr) {
 		 rightlevel = calculateLevel(ptr->rptr);
 		 rightlevel = rightlevel + 1;
 	}
+
 	ptr->balance =  leftlevel - rightlevel;
 	if (ptr->balance == -1 ||
 		ptr->balance == 1 ||
@@ -60,6 +64,20 @@ bool caluclateandBalanceInternal(AVLNode * ptr) {
 	} else if (ptr->balance == -2) {
 		balanceTree(ptr);
 	}
+	
+	leftlevel = 0;
+
+	if (ptr1->lptr != NULL) {
+		leftlevel = calculateLevel(ptr1->lptr);
+		leftlevel = leftlevel + 1;
+	}
+	rightlevel = 0;
+	if (ptr1->rptr != NULL) {
+		 rightlevel = calculateLevel(ptr1->rptr);
+		 rightlevel = rightlevel + 1;
+	}
+	ptr1->balance = leftlevel - rightlevel;
+
 }
 
 //-2 +1
@@ -190,14 +208,14 @@ bool leftleftRotation1(AVLNode * ptr) {
 
 	} else if (parent != NULL) {
 		if (parent->lptr != NULL && parent->lptr->data == ptr->data) {
-			AVLNode * ptr = leftleftRotationInternal1(ptr);
-			parent->lptr = ptr;
-			ptr->parent = parent;
+			AVLNode * ptr1 = leftleftRotationInternal1(ptr);
+			parent->lptr = ptr1;
+			ptr1->parent = parent;
 		} else if (parent->rptr != NULL && parent->rptr->data == ptr->data) {
 
-			AVLNode * ptr = leftleftRotationInternal1(ptr);
-			parent->rptr = ptr;
-			ptr->parent = parent;
+			AVLNode * ptr1 = leftleftRotationInternal1(ptr);
+			parent->rptr = ptr1;
+			ptr1->parent = parent;
 		}
 
 	}
@@ -334,24 +352,26 @@ int calculateLevel(AVLNode * ptr) {
 
 AVLNode * addNode(AVLNode * root, int data) {
 	AVLNode * ptr = root;
-	if (data < ptr->data) {
-		if (ptr->lptr == NULL) {
-			AVLNode * ptr1 = new AVLNode(data);
-			ptr->lptr = ptr1;
-			ptr1->parent = ptr;
-			return ptr1;
-		} else if (ptr->lptr != NULL) {
-			addNode(ptr->lptr, data);
-		}
-	} else if (data > ptr->data) {
-		if (ptr->rptr == NULL) {
-			AVLNode * ptr2 = new AVLNode(data);
-			ptr->rptr = ptr2;
-			ptr2->parent = ptr;
-			return ptr2;
+	while (1) {
+		if (data < ptr->data) {
+			if (ptr->lptr == NULL) {
+				AVLNode * ptr1 = new AVLNode(data);
+				ptr->lptr = ptr1;
+				ptr1->parent = ptr;
+				return ptr1;
+			} else if (ptr->lptr != NULL) {
+				ptr = ptr->lptr;
+			}
+		} else if (data > ptr->data) {
+			if (ptr->rptr == NULL) {
+				AVLNode * ptr2 = new AVLNode(data);
+				ptr->rptr = ptr2;
+				ptr2->parent = ptr;
+				return ptr2;
 
-		} else if (ptr->rptr != NULL) {
-			addNode(ptr->rptr, data);
+			} else if (ptr->rptr != NULL) {
+				ptr = ptr->rptr;
+			}
 		}
 	}
 	return NULL;
