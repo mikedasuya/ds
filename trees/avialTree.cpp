@@ -23,7 +23,7 @@ AVLNode * g_root = NULL;
 int main() {
 	int ar [10] = {9, 4, 3, 2, 1, 13, 12, 11, 14,17 };
 	AVLNode * root = NULL;
-	for (int i = 0; i < 9; i++) {
+	for (int i = 0; i < 10; i++) {
 		int data = ar[i];
 		if (root == NULL) {
 			root = new AVLNode(data);
