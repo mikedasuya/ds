@@ -18,7 +18,7 @@ class GrNode {
 	int ar[7][7];
 	int calculateVal( ) {
 		vector<pair<int,int> >::iterator iter = vect.begin();
-		int val = 0;
+		val = 0;
 		while (iter != vect.end()) {
 			pair<int, int> p = *iter;
 			int start = p.first;
@@ -26,8 +26,8 @@ class GrNode {
 			val = val + ar[start][end];
 			++iter;
 		}
-		
-		return val;
+		int res = val;
+		return res;
 	}
 	public:
 	GrNode * next;
@@ -44,6 +44,11 @@ class GrNode {
 	  pair<int, int> p(start, end);
 	  vect.push_back(p);
 	  calculateVal();
+	  vector <pair<int, int> >::iterator iter = vect.begin();
+	  while (iter != vect.end()) {
+		  pair <int, int> p = *iter;
+		  ++iter;
+	  }
 	  next = NULL;	
 	}
 	GrNode(vector< pair<int,int> > vec, int start, int end, int r[7][7]) {
@@ -63,14 +68,29 @@ class GrNode {
 	}
 
 	vector< pair<int, int> > getArc() {
+		cout << endl << vect.size() <<endl;
+		cout << endl << vect.size() <<endl;
+		cout << endl << vect.size() <<endl;
+		cout << endl << vect.size() <<endl;
+		cout << endl << vect.size() <<endl;
+		printArc();
+		cout << endl << vect.size() <<endl;
+		cout << endl << vect.size() <<endl;
+		cout << endl << vect.size() <<endl;
+		cout << endl << vect.size() <<endl;
+		cout << endl << vect.size() <<endl;
 		return vect;
 	}
 	int getVal() {
 		return val;
 	}
 	int endArc() {
-		vector < pair<int, int> >::iterator end = vect.end();
-		pair<int, int> p = *end;
+		vector < pair<int, int> >::iterator start = vect.begin();
+		pair<int, int> p(0,0);
+		while (start != vect.end()) {
+			p = *start;
+			start++;
+		}
 		int endelement = p.second;
 		return endelement;
 	}
@@ -94,6 +114,7 @@ class GrNode {
 			Edge * ed = new Edge();
 			str += ed->getEdgeChar(start);
 			str += ed->getEdgeChar(end);
+			++iter;
 		}
 		cout << endl << "edge " << str<<endl;
 		cout << endl << "edge " << val<<endl;

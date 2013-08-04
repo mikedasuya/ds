@@ -20,9 +20,11 @@ class LinkList1 {
 	}
 	bool insert(GrNode * ptr, int ar[7][7]) {
 	 if (root == NULL) {
-		 	root = new GrNode(ptr->startArc(), ptr->endArc(), ar);
-			root->setArc(ptr->getArc());
-			mapEndArc.insert(pair<int,int>(ptr->startArc(), ptr->endArc()));
+		    int start = ptr->startArc();
+			int end = ptr->endArc();
+		 	root = new GrNode(start, end, ar);
+			//root->setArc(ptr->getArc());
+			mapEndArc.insert(pair<int,int>(ptr->endArc(), ptr->endArc()));
 			return true;
 	 }
 	 multimap<int, int>::iterator iter1 = mapEndArc.find(ptr->endArc());
@@ -39,13 +41,13 @@ class LinkList1 {
 	 } else {
 		if (ptr->getVal() < root->getVal() ||
 			ptr->getVal() == root->getVal() ) {
-			ptr->next = root->next;
+			ptr->next = root;
 			root = ptr;
 			mapEndArc.insert(pair<int, int>(root->endArc(), root->endArc()));
 		} else if (ptr->getVal() > root->getVal()) {
 			GrNode * mvptr = root;
 			while (mvptr->next != NULL &&
-				   mvptr->getVal() < ptr->getVal()) {
+				   mvptr->next->getVal() < ptr->getVal()) {
 				mvptr = mvptr->next;
 		
 			}
@@ -71,6 +73,7 @@ class LinkList1 {
 		GrNode * mvptr = root;
 		while (mvptr->next != NULL) {
 			count++;
+			mvptr = mvptr->next;
 		}
 		if (count > 1 && root->endArc() == 6) {
 			return false;

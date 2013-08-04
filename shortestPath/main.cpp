@@ -33,6 +33,7 @@ int main() {
 				link->insert(node, ar);
 			}
 		}
+		cout <<endl << "while"<<endl;
 	}
 	link->getLatest()->printArc();
 }
