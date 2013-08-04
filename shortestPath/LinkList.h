@@ -69,7 +69,7 @@ class LinkList1 {
 	}
 
 	bool isIterationNeeded() {
-		int count = 0;
+		int count = 1;
 		GrNode * mvptr = root;
 		while (mvptr->next != NULL) {
 			count++;

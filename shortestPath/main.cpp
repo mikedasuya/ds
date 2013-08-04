@@ -25,15 +25,22 @@ int main() {
 	}
 	while (link->isIterationNeeded() ) {
 		GrNode * node = link->getLatest();
+		cout << "main"<<node->vect.size()<<endl;
 		int row = node->endArc();
 		for (int i = 0; i < 7; i++) {
 			int path = ar[row][i];
 			if (path > 0) {
-				GrNode *node = new GrNode(node->getArc(), row, i, ar);
+				vector<pair<int,int> >::iterator iter = node->vect.begin();
+				vector <pair<int, int> > vect1;
+				while (iter != node->vect.end()) {
+					pair<int,int> p = *iter;
+					vect1.push_back(p);
+					++iter;
+				}
+				GrNode *node = new GrNode(vect1, row, i, ar);
 				link->insert(node, ar);
 			}
 		}
-		cout <<endl << "while"<<endl;
 	}
 	link->getLatest()->printArc();
 }

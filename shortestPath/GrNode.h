@@ -11,7 +11,7 @@
 using namespace std;
 
 class GrNode {
-	private:
+	public:
 	string arc;
 	int val;
 	vector<pair<int, int> > vect;
@@ -68,17 +68,6 @@ class GrNode {
 	}
 
 	vector< pair<int, int> > getArc() {
-		cout << endl << vect.size() <<endl;
-		cout << endl << vect.size() <<endl;
-		cout << endl << vect.size() <<endl;
-		cout << endl << vect.size() <<endl;
-		cout << endl << vect.size() <<endl;
-		printArc();
-		cout << endl << vect.size() <<endl;
-		cout << endl << vect.size() <<endl;
-		cout << endl << vect.size() <<endl;
-		cout << endl << vect.size() <<endl;
-		cout << endl << vect.size() <<endl;
 		return vect;
 	}
 	int getVal() {
