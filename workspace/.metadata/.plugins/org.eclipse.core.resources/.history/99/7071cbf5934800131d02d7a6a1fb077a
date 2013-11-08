@@ -1,0 +1,26 @@
+package com.example.quoteapp.http;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.StatusLine;
+import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.DefaultHttpClient;
+
+import android.R.string;
+
+public class HttpConnection {
+string URL = "http://www.iheartquotes.com/api/v1/random";
+HttpClient httpclient = new DefaultHttpClient();
+    HttpResponse response = httpclient.execute(new HttpGet(URL));
+    StatusLine statusLine = response.getStatusLine();
+    if(statusLine.getStatusCode() == HttpStatus.SC_OK){
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        response.getEntity().writeTo(out);
+        out.close();
+        String responseString = out.toString();
+        //..more logic
+    } else{
+        //Closes the connection.
+        response.getEntity().getContent().close();
+        throw new IOException(statusLine.getReasonPhrase());
+    }
+}
