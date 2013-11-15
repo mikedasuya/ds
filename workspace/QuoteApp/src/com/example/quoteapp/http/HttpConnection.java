@@ -14,59 +14,51 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import android.R.string;
 
 public class HttpConnection {
+
+	public String result = null;
 	
-public HttpConnection() {	
-String URL = "http://www.iheartquotes.com/api/v1/random";
+public HttpConnection() throws Exception {	
+String URL = "http://www.iheartquotes.com/api/v1/random?sources=codehappy+fortune+liberty+literature+murphy++math+alberteinstein+osho&max_lines=4&max_characters=120";
 String URL1 = "http://www.notableandquotable.com/GetRandomQuoteNoHTML";
 String URL3 = "http://api.adviceslip.com/advice";
+
+
 HttpClient httpclient = new DefaultHttpClient();
     HttpResponse response = null;
 	try {
 		System.out.println(" ----- send the command");
 		response = httpclient.execute(new HttpGet(URL));
+	    StatusLine statusLine = response.getStatusLine();
+	    if(statusLine.getStatusCode() == HttpStatus.SC_OK){
+	    	ByteArrayOutputStream out = new ByteArrayOutputStream();
+        	response.getEntity().writeTo(out);
+			out.close();
+		    String responseString = out.toString();
+		    result = responseString;
+		    System.out.print(responseString);
+        //..more logic
+	    } else {
+        	response.getEntity().getContent().close();
+	    }
+	    
 	} catch (ClientProtocolException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
+		throw e;
 	} catch (IOException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
+		throw e;
+	}  catch (IllegalStateException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+		throw e;
 	}
-    StatusLine statusLine = response.getStatusLine();
-    if(statusLine.getStatusCode() == HttpStatus.SC_OK){
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        try {
-			response.getEntity().writeTo(out);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        try {
-			out.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        String responseString = out.toString();
-        System.out.print(responseString);
-        //..more logic
-    } else{
-        //Closes the connection.
-        try {
-			response.getEntity().getContent().close();
-		} catch (IllegalStateException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        try {
-			throw new IOException(statusLine.getReasonPhrase());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    }
+}
+
+public String getString() {
+	// TODO Auto-generated method stub
+	return result;
 }
 
 
